@@ -1,1 +1,70 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio
 .vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+packages/
+!packages/build/
+
+# Logs
+*.log
+
+# Test Results
+TestResults/
+
+# Publish output
+publish/
+
+# IIS Express
+.vs/config/
+
+# Entity Framework
+*.mdf
+*.ldf
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# DotCover
+*.dotCover
+
+# Azure
+PublishProfiles/
+
+# Local app settings (optional)
+appsettings.Development.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node (if your project contains frontend assets)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Secrets
+secrets.json
