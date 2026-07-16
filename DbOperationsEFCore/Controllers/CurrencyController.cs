@@ -63,7 +63,7 @@ namespace DbOperationsEFCore.Controllers
         {
             //var result = await _appDbContext.Currencies.Where(x=>x.Title==name).FirstOrDefaultAsync();//no error get default value null
 
-            var result = await _appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name));//for performance improvement
+            var result = await _appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name);//for performance improvement
 
             // var result = await _appDbContext.Currencies.Where(x => x.Title == name).FirstAsync();//System.InvalidOperationException: Sequence contains no elements. 
 
@@ -72,5 +72,24 @@ namespace DbOperationsEFCore.Controllers
             //var result = await _appDbContext.Currencies.Where(x => x.Title == name).SingleOrDefaultAsync();//System.InvalidOperationException: Sequence contains more than one element.
             return Ok(result);
         }
+
+        [HttpGet("{name}/{description}")]
+        public async Task<IActionResult> GetAllCurrencyByNameAndDescAsync([FromRoute] string name, [FromRoute] string description)
+        {
+            var result = await _appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name && x.Description == description);//multiple parameters
+            //var result = await _appDbContext.Currencies.SingleOrDefaultAsync(x => x.Title == name && x.Description == description);//multiple parameters and no error as it uniqly identify using compsite columns
+            return Ok(result);
+        }
+
+        //[HttpGet("{name}")]
+        //public async Task<IActionResult> GetAllCurrencyByNameAndDescAsync1([FromRoute] string name, [FromQuery] string? description)
+        //{
+        //    var result = await _appDbContext.Currencies.FirstOrDefaultAsync(x => x.Title == name &&
+        //    (string.IsNullOrEmpty(description) ||
+        //    x.Description == description)
+        //    );//multiple parameters with optional
+
+        //    return Ok(result);
+        //}
     }
 }
