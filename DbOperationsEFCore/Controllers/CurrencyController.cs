@@ -45,7 +45,7 @@ namespace DbOperationsEFCore.Controllers
             //return Ok(response);
 
             var result = await  (from currencies in _appDbContext.Currencies
-                          select currencies).ToListAsync();
+                          select new Currency() { Id=currencies.Id,Title=currencies.Title}).ToListAsync();
 
             return Ok(result);
         }
@@ -106,7 +106,26 @@ namespace DbOperationsEFCore.Controllers
         [HttpPost("all")]
         public async Task<IActionResult> GetAllCurrencyByIdsAsync([FromBody] List<int> Ids)
         {
-            var result = await _appDbContext.Currencies.Where(x => Ids.Contains(x.Id)).ToListAsync();
+            //var result = await _appDbContext.Currencies.
+            //    Where(x => Ids.Contains(x.Id)).
+            //    ToListAsync();
+            //var result = await _appDbContext.Currencies.
+            //   Where(x => Ids.Contains(x.Id)).
+            //   Select(x=> new Currency()
+            //   {
+            //       Id=x.Id,
+            //       Title=x.Title,
+            //   }).               
+            //   ToListAsync();
+
+            var result = await _appDbContext.Currencies.
+              Where(x => Ids.Contains(x.Id)).
+              Select(x => new
+              {
+                  CurrencyId = x.Id,
+                  CurrencyTitle = x.Title,
+              }).
+              ToListAsync();
             return Ok(result);
         }
     }
