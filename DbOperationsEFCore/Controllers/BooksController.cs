@@ -19,10 +19,25 @@ namespace DbOperationsEFCore.Controllers
         [HttpPost("bulk")]
         public async Task<IActionResult> AddNewBooks([FromBody] List<Book> booksmodel)
         {
-            //bookmodel.CreatedOn = DateTime.Now;
             appDbContext.Books.AddRangeAsync(booksmodel);
             await appDbContext.SaveChangesAsync();
             return Ok(booksmodel);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdteBook([FromRoute] int id,[FromBody] Book bookmodel)
+        {
+            //var book = appDbContext.Books.Find(id);
+            var book=appDbContext.Books.FirstOrDefault(x=>x.Id==id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+            book.Title = bookmodel.Title;
+            book.Description = bookmodel.Description;
+            await appDbContext.SaveChangesAsync();
+            return Ok(book);
         }
     }
 }
