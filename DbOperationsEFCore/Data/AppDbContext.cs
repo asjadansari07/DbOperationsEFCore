@@ -14,7 +14,8 @@ namespace DbOperationsEFCore.Data
                 new Currency() { Id=1,Title="INR", Description="Indian INR"},
                 new Currency() { Id=2,Title="Dollar", Description= "Dollar"},
                 new Currency() { Id=3,Title="Euro", Description="Euro"},
-                new Currency() { Id=4,Title="Dinar", Description="Dinar"}
+                new Currency() { Id=4,Title="Dinar", Description="Dinar"},
+                new Currency() { Id=5,Title="Yen", Description="from Japan"}
                 );
 
             modelBuilder.Entity<Language>().HasData(

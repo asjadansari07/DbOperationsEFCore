@@ -1,12 +1,11 @@
-﻿namespace DbOperationsEFCore.Data
+﻿namespace DbOperationsEFCore.Helper
 {
-    public class Currency
+    public class AppCurrency
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public ICollection<BookPrice> BookPrices { get; set; }
-
+        //public ICollection<BookPrice> BookPrices { get; set; }
     }
 }
