@@ -91,5 +91,23 @@ namespace DbOperationsEFCore.Controllers
 
         //    return Ok(result);
         //}
+
+
+        //[HttpGet("{title}")]
+        //public async Task<IActionResult> GetAllCurrencyByNameAsync1([FromRoute] string title)
+        //{
+        //    var result = await _appDbContext.Currencies.Where(x => x.Title == title).ToListAsync();//multiple records with same title
+
+        //    return Ok(result);
+        //}
+
+
+
+        [HttpPost("all")]
+        public async Task<IActionResult> GetAllCurrencyByIdsAsync([FromBody] List<int> Ids)
+        {
+            var result = await _appDbContext.Currencies.Where(x => Ids.Contains(x.Id)).ToListAsync();
+            return Ok(result);
+        }
     }
 }
