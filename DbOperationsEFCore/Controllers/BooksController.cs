@@ -66,9 +66,26 @@ namespace DbOperationsEFCore.Controllers
             await appDbContext.Books
              //.Where(x=>x.NoOfPages==20) 
              .ExecuteUpdateAsync(x => x
-            .SetProperty(p => p.Title, p.Title+"updated title in bulk")
+            .SetProperty(p => p.Title, p=>p.Title+"updated title in bulk")
             .SetProperty(p => p.Description, "updated desc in bulk"));
             return Ok();
+        }
+
+
+        [HttpDelete("{bookId}")]
+        public async Task<IActionResult> DeleteBookAsync([FromRoute] int bookId)
+        {
+            //var book = appDbContext.Books.FindAsync(id);//find by id
+
+            //if (book == null)
+            //{
+            //    return NotFound();
+            //}
+
+            var book = new Book { Id = bookId };//need to create object like this as we are not getting model(type) from input
+            appDbContext.Entry(book).State = EntityState.Deleted;
+            await appDbContext.SaveChangesAsync();
+            return Ok(book);
         }
     }
 }
