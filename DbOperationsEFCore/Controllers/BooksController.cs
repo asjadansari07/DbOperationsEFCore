@@ -1,6 +1,7 @@
 ﻿using DbOperationsEFCore.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace DbOperationsEFCore.Controllers
 {
@@ -75,17 +76,41 @@ namespace DbOperationsEFCore.Controllers
         [HttpDelete("{bookId}")]
         public async Task<IActionResult> DeleteBookAsync([FromRoute] int bookId)
         {
-            //var book = appDbContext.Books.FindAsync(id);//find by id
+            //var book = await appDbContext.Books.FindAsync(bookId);//find by id
 
             //if (book == null)
             //{
             //    return NotFound();
             //}
+            //appDbContext.Books.Remove(book);
 
             var book = new Book { Id = bookId };//need to create object like this as we are not getting model(type) from input
             appDbContext.Entry(book).State = EntityState.Deleted;
             await appDbContext.SaveChangesAsync();
-            return Ok(book);
+            return Ok();
+        }
+
+        [HttpDelete("{bulk}")]
+        public async Task<IActionResult> DeleteBookInBulkAsync()
+        {
+
+            //var book = new Book { Id = bookId };//need to create object like this as we are not getting model(type) from input
+            //appDbContext.Entry(book).State = EntityState.Deleted;
+            //await appDbContext.SaveChangesAsync();
+
+            //var books =await appDbContext.Books.Where(x=>x.Id>3).ToListAsync();//find by id
+
+            //if (books == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //appDbContext.Books.RemoveRange(books);
+            //await appDbContext.SaveChangesAsync();
+
+            //var books = await appDbContext.Books.ExecuteDeleteAsync();//all records will be deleted
+            var books = await appDbContext.Books.Where(x => x.Id < 8).ExecuteDeleteAsync();//can be used for single or bulk delete
+            return Ok();
         }
     }
 }
