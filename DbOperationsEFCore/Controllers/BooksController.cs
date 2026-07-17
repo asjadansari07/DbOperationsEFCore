@@ -1,5 +1,6 @@
 ﻿using DbOperationsEFCore.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DbOperationsEFCore.Controllers
 {
@@ -48,6 +49,26 @@ namespace DbOperationsEFCore.Controllers
             //appDbContext.Entry(bookmodel).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await appDbContext.SaveChangesAsync();
             return Ok(bookmodel);
+        }
+
+        [HttpPut("bulk")]
+        public async Task<IActionResult> UpdteBookInBulk()
+        {
+            //var books=appDbContext.Books.ToList();//get all books hit db 1st time
+
+            //foreach (var item in books)
+            //{
+            //    item.Title = "updated title in bulk ony by one";//n+1 query issue-update each record one by one, not good for performance
+            //}
+            //await appDbContext.SaveChangesAsync();
+
+
+            await appDbContext.Books
+             //.Where(x=>x.NoOfPages==20) 
+             .ExecuteUpdateAsync(x => x
+            .SetProperty(p => p.Title, p.Title+"updated title in bulk")
+            .SetProperty(p => p.Description, "updated desc in bulk"));
+            return Ok();
         }
     }
 }
