@@ -128,5 +128,22 @@ namespace DbOperationsEFCore.Controllers
               ToListAsync();
             return Ok(result);
         }
+
+
+        [HttpGet("AsNoTracking")]
+      
+        public async Task<IActionResult> GetAllCurrenciesAsNoTracking()
+        {
+            //var result = await _appDbContext.Currencies.ToListAsync();
+
+
+            //var response = _mapper.Map<List<AppCurrency>>(result);
+            //return Ok(response);
+
+            var result = await (from currencies in _appDbContext.Currencies
+                                select new Currency() { Id = currencies.Id, Title = currencies.Title }).AsNoTracking().ToListAsync();//if do not want to track changes by EF core
+
+            return Ok(result);
+        }
     }
 }
