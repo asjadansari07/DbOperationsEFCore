@@ -27,7 +27,7 @@ namespace DbOperationsEFCore.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdteBook([FromRoute] int id,[FromBody] Book bookmodel)
         {
-            //var book = appDbContext.Books.Find(id);
+            //var book = appDbContext.Books.Find(id);//find by id
             var book=appDbContext.Books.FirstOrDefault(x=>x.Id==id);
 
             if (book == null)
@@ -38,6 +38,16 @@ namespace DbOperationsEFCore.Controllers
             book.Description = bookmodel.Description;
             await appDbContext.SaveChangesAsync();
             return Ok(book);
+        }
+
+
+        [HttpPut("")]
+        public async Task<IActionResult> UpdteBookWithSingleQuery([FromBody] Book bookmodel)
+        {
+           appDbContext.Books.Update(bookmodel);//drawback is need to pass mandatory fields for model and database, no bluk update
+            //appDbContext.Entry(bookmodel).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await appDbContext.SaveChangesAsync();
+            return Ok(bookmodel);
         }
     }
 }
