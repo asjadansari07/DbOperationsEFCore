@@ -96,7 +96,38 @@ namespace DbOperationsEFCore.Controllers
             return Ok(books);
         }
 
-        
+        [HttpGet("ExplicitLoading")]
+        public async Task<IActionResult> GetBooksExplicitLoadingAsync()
+        {
+            var book =await appDbContext.Books.FirstOrDefaultAsync();
+            await appDbContext.Entry(book).Reference(x=>x.Author).LoadAsync();//explicit loading 1-1
+
+
+            //await appDbContext.Entry(book).Reference(x=>x.Author).Reference(x => x.Language).LoadAsync();//can't use reference twice
+            
+            //await appDbContext.Entry(book).Reference(x => x.Language).LoadAsync();//can't use reference twice, use single
+            //await appDbContext.Entry(book).Reference(x=>x.Author).LoadAsync();//can't use reference twice,use single
+
+
+
+            var languages = await appDbContext.Languages.ToListAsync();
+            //foreach (var language in languages)
+            //{
+            //    await appDbContext.Entry(language).Collection(x=>x.Books).LoadAsync();//explicit loading 1-*
+            //}
+
+            foreach (var language in languages)
+            {
+                await appDbContext.Entry(language).Collection(x => x.Books)
+                    .Query()
+                    .Where(x=>x.NoOfPages==30)
+                    .LoadAsync();//explicit loading 1-* with condition
+            }
+
+
+            return Ok(book);
+        }
+
         [HttpGet("LazyLoading")]
         public async Task<IActionResult> GetBooksLazyLoadingAsync()
         {
