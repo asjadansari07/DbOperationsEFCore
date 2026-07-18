@@ -142,7 +142,31 @@ namespace DbOperationsEFCore.Controllers
             return Ok(book);
         }
 
-        
+        [HttpGet("ExecuteSQLQuery")]
+        public async Task<IActionResult> GetBooksWithSqlQueryAsync()
+        {
+            //var authors = await appDbContext.Authors.FromSql($"select * from authors where id=2").ToListAsync();
+
+            //var id = 1;
+            //var authors = await appDbContext.Authors.FromSql($"select * from authors where id={id}").ToListAsync();
+
+
+            //var authors = await appDbContext.Authors.FromSql($"select * from authors").Where(x => x.Id >1).ToListAsync();
+
+            var colname = "id";
+            var colvalue = 1;
+            //var authors = await appDbContext.Authors.FromSql($"select * from authors where {colname}={colvalue}").ToListAsync();//not working with colvalue
+
+
+            var param = new SqlParameter("colvalue", colvalue);
+            var authors1 = await appDbContext.Authors.FromSqlRaw($"select * from authors where {colname}=@colvalue",param).ToListAsync();
+
+
+
+
+            return Ok(authors1);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {
