@@ -50,14 +50,14 @@ namespace DbOperationsEFCore.Controllers
             //  .ToListAsync();
 
             var books = appDbContext.Books
-             .Select(x => new 
+             .Select(x => new
              {
                  Id = x.Id,
                  Title = x.Title,
                  Description = x.Description,
                  NoOfPages = x.NoOfPages,
-                 Author = x.Author!=null?x.Author.Name:"NA",
-                 Language = x.Language.Title!=null? x.Language.Title:"NA",
+                 Author = x.Author != null ? x.Author.Name : "NA",
+                 Language = x.Language.Title != null ? x.Language.Title : "NA",
              }
              )
              .ToListAsync();//navigation properties(other tables)
@@ -68,7 +68,7 @@ namespace DbOperationsEFCore.Controllers
         public async Task<IActionResult> GetBooksEagerLoadingAsync()
         {
             var books = appDbContext.Books
-                .Include(x=>x.Author)
+                .Include(x => x.Author)
                 .ToListAsync();
 
 
@@ -78,36 +78,36 @@ namespace DbOperationsEFCore.Controllers
 
 
             var book1 = appDbContext.Books
-               .Where(x=>x.Id==4)
+               .Where(x => x.Id == 4)
                .Include(x => x.Author)
                .FirstOrDefaultAsync();
 
             var book2 = appDbContext.Books
               .Include(x => x.Author)
-              .ThenInclude(x=> x.Email)
-              .ThenInclude(x=> new { countryName="India",countryCode="IN"})
+              .ThenInclude(x => x.Email)
+              .ThenInclude(x => new { countryName = "India", countryCode = "IN" })
               .FirstOrDefaultAsync();
 
             var book3 = appDbContext.Books
              .Include(x => x.Author)
              .Include(x => x.Language)
-             .ToListAsync ();//error object length is larger than the maximum allowed depth of 32(language has 1-* relationship).comment Books property in language class
+             .ToListAsync();//error object length is larger than the maximum allowed depth of 32(language has 1-* relationship).comment Books property in language class
 
-
-
-            //var books = appDbContext.Books
-            // .Select(x => new
-            // {
-            //     Id = x.Id,
-            //     Title = x.Title,
-            //     Description = x.Description,
-            //     NoOfPages = x.NoOfPages,
-            //     Author = x.Author != null ? x.Author.Name : "NA",
-            //     Language = x.Language.Title != null ? x.Language.Title : "NA",
-            // }
-            // )
-            // .ToListAsync();//navigation properties(other tables)
             return Ok(books);
+        }
+
+        
+        [HttpGet("LazyLoading")]
+        public async Task<IActionResult> GetBooksLazyLoadingAsync()
+        {
+            var book = await appDbContext.Books.FirstOrDefaultAsync();
+
+            var author = book.Author;//get author details as null(need to connec to db again), need to enable lazy loading using proxy package
+
+
+           
+
+            return Ok(book);
         }
 
 
