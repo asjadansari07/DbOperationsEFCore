@@ -182,6 +182,20 @@ namespace DbOperationsEFCore.Controllers
             return Ok(books3);
         }
 
+        [HttpGet("ExecuteQueryWithoutEntity")]
+        public async Task<IActionResult> ExecuteQueryWithoutEntityAsync()
+        {
+
+            //var authors = await appDbContext.Database.SqlQuery<Book>($"select * from authors").ToListAsync();
+
+            //var authors = await appDbContext.Database.SqlQuery<Book>($"select * from authors").Where(x=>x.Id>1).ToListAsync();
+
+            //var authors = await appDbContext.Database.SqlQuery<int>($"select id from authors").ToListAsync();
+            var authors = await appDbContext.Database.ExecuteSqlAsync($"select * from authors");//no need to use tolist as it will run in db
+
+            return Ok(authors);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {
