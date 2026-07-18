@@ -64,6 +64,53 @@ namespace DbOperationsEFCore.Controllers
             return Ok(books);
         }
 
+        [HttpGet("EagerLoading")]
+        public async Task<IActionResult> GetBooksEagerLoadingAsync()
+        {
+            var books = appDbContext.Books
+                .Include(x=>x.Author)
+                .ToListAsync();
+
+
+            var book = appDbContext.Books
+               .Include(x => x.Author)
+               .FirstOrDefaultAsync();
+
+
+            var book1 = appDbContext.Books
+               .Where(x=>x.Id==4)
+               .Include(x => x.Author)
+               .FirstOrDefaultAsync();
+
+            var book2 = appDbContext.Books
+              .Include(x => x.Author)
+              .ThenInclude(x=> x.Email)
+              .ThenInclude(x=> new { countryName="India",countryCode="IN"})
+              .FirstOrDefaultAsync();
+
+            var book3 = appDbContext.Books
+             .Include(x => x.Author)
+             .Include(x => x.Language)
+             .ToListAsync ();//error object length is larger than the maximum allowed depth of 32(language has 1-* relationship).comment Books property in language class
+
+
+
+            //var books = appDbContext.Books
+            // .Select(x => new
+            // {
+            //     Id = x.Id,
+            //     Title = x.Title,
+            //     Description = x.Description,
+            //     NoOfPages = x.NoOfPages,
+            //     Author = x.Author != null ? x.Author.Name : "NA",
+            //     Language = x.Language.Title != null ? x.Language.Title : "NA",
+            // }
+            // )
+            // .ToListAsync();//navigation properties(other tables)
+            return Ok(books);
+        }
+
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {
