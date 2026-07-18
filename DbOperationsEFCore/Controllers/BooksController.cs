@@ -167,6 +167,21 @@ namespace DbOperationsEFCore.Controllers
             return Ok(authors1);
         }
 
+        [HttpGet("ExecuteProcedure")]
+        public async Task<IActionResult> ExecuteProcedureAsync()
+        {
+            //var books=await appDbContext.Authors.FromSql($"exec sp_getallbooks").ToListAsync();
+
+            //var books1 = await appDbContext.Authors.FromSql($"exec sp_getallbooksbyid 1").ToListAsync();
+            //var books2= await appDbContext.Authors.FromSql($"exec sp_getallbooksbyid {1}").ToListAsync();
+
+            var param = new SqlParameter("@bookId", 1);
+
+            var books3 = await appDbContext.Authors.FromSql($"exec sp_getallbooksbyid {param}").ToListAsync();
+
+            return Ok(books3);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {
