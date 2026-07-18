@@ -13,7 +13,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("AppDb")).LogTo(Console.WriteLine));
+options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("AppDb")).LogTo(Console.WriteLine));
 
 //builder.Services.AddAutoMapper(typeof(Program));
 var app = builder.Build();

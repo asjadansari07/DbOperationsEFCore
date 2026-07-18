@@ -1,5 +1,6 @@
 ﻿using DbOperationsEFCore.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -99,12 +100,12 @@ namespace DbOperationsEFCore.Controllers
         [HttpGet("ExplicitLoading")]
         public async Task<IActionResult> GetBooksExplicitLoadingAsync()
         {
-            var book =await appDbContext.Books.FirstOrDefaultAsync();
-            await appDbContext.Entry(book).Reference(x=>x.Author).LoadAsync();//explicit loading 1-1
+            var book = await appDbContext.Books.FirstOrDefaultAsync();
+            await appDbContext.Entry(book).Reference(x => x.Author).LoadAsync();//explicit loading 1-1
 
 
             //await appDbContext.Entry(book).Reference(x=>x.Author).Reference(x => x.Language).LoadAsync();//can't use reference twice
-            
+
             //await appDbContext.Entry(book).Reference(x => x.Language).LoadAsync();//can't use reference twice, use single
             //await appDbContext.Entry(book).Reference(x=>x.Author).LoadAsync();//can't use reference twice,use single
 
@@ -120,7 +121,7 @@ namespace DbOperationsEFCore.Controllers
             {
                 await appDbContext.Entry(language).Collection(x => x.Books)
                     .Query()
-                    .Where(x=>x.NoOfPages==30)
+                    .Where(x => x.NoOfPages == 30)
                     .LoadAsync();//explicit loading 1-* with condition
             }
 
@@ -133,15 +134,15 @@ namespace DbOperationsEFCore.Controllers
         {
             var book = await appDbContext.Books.FirstOrDefaultAsync();
 
-            var author = book.Author;//get author details as null(need to connec to db again), need to enable lazy loading using proxy package
+            //var author = book.Author;//get author details as null(need to connec to db again), need to enable lazy loading using proxy package
 
 
-           
+            var author = book.Author;//after installing proxy package and register in program and marked related classes virtual, get data in this(again call db for author data)
 
             return Ok(book);
         }
 
-
+        
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {

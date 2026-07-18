@@ -6,7 +6,7 @@
         public int BookId { get; set; }
         public int CurrencyId { get; set; }
         public int Amount { get; set; }
-        public Book Book { get; set; }
-        public Currency Currency { get; set; }
+        public virtual Book Book { get; set; }
+        public virtual Currency Currency { get; set; }
     }
 }
