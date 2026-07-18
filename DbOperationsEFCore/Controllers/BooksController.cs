@@ -9,8 +9,63 @@ namespace DbOperationsEFCore.Controllers
     [ApiController]
     public class BooksController(AppDbContext appDbContext) : ControllerBase
     {
+
+        [HttpGet("")]
+        public async Task<IActionResult> GetBooksAsync()
+        {
+            //var books = appDbContext.Books.ToListAsync();
+            //return Ok(books);
+
+            //var books = appDbContext.Books
+            //    .Select(x=> new 
+            //    {
+            //    x.Id,MyBookTitile= x.Title, x.Description,x.NoOfPages
+            //    }
+            //    )
+            //    .ToListAsync();//anonymous object
+
+
+            //var books = appDbContext.Books
+            //   .Select(x => new Book()
+            //   {
+            //       Id=x.Id,
+            //       Title=x.Title,
+            //       Description=x.Description,
+            //       NoOfPages = x.NoOfPages
+            //   }
+            //   )
+            //   .ToListAsync();
+
+            //var books = appDbContext.Books
+            //  .Select(x => new Book()
+            //  {
+            //      Id = x.Id,
+            //      Title = x.Title,
+            //      Description = x.Description,
+            //      NoOfPages = x.NoOfPages,
+            //      Author = x.Author,
+            //      Language=x.Language,
+            //  }
+            //  )
+            //  .ToListAsync();
+
+            var books = appDbContext.Books
+             .Select(x => new 
+             {
+                 Id = x.Id,
+                 Title = x.Title,
+                 Description = x.Description,
+                 NoOfPages = x.NoOfPages,
+                 Author = x.Author!=null?x.Author.Name:"NA",
+                 Language = x.Language.Title!=null? x.Language.Title:"NA",
+             }
+             )
+             .ToListAsync();//navigation properties(other tables)
+            return Ok(books);
+        }
+
         [HttpPost("")]
-       public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
+        public async Task<IActionResult> AddNewBook([FromBody] Book bookmodel)
         {
             //bookmodel.CreatedOn = DateTime.Now;
             appDbContext.Books.Add(bookmodel);
@@ -27,10 +82,10 @@ namespace DbOperationsEFCore.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdteBook([FromRoute] int id,[FromBody] Book bookmodel)
+        public async Task<IActionResult> UpdteBook([FromRoute] int id, [FromBody] Book bookmodel)
         {
             //var book = appDbContext.Books.Find(id);//find by id
-            var book=appDbContext.Books.FirstOrDefault(x=>x.Id==id);
+            var book = appDbContext.Books.FirstOrDefault(x => x.Id == id);
 
             if (book == null)
             {
@@ -46,8 +101,8 @@ namespace DbOperationsEFCore.Controllers
         [HttpPut("")]
         public async Task<IActionResult> UpdteBookWithSingleQuery([FromBody] Book bookmodel)
         {
-           appDbContext.Books.Update(bookmodel);//drawback is need to pass mandatory fields for model and database, no bluk update
-            //appDbContext.Entry(bookmodel).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            appDbContext.Books.Update(bookmodel);//drawback is need to pass mandatory fields for model and database, no bluk update
+                                                 //appDbContext.Entry(bookmodel).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             await appDbContext.SaveChangesAsync();
             return Ok(bookmodel);
         }
@@ -67,7 +122,7 @@ namespace DbOperationsEFCore.Controllers
             await appDbContext.Books
              //.Where(x=>x.NoOfPages==20) 
              .ExecuteUpdateAsync(x => x
-            .SetProperty(p => p.Title, p=>p.Title+"updated title in bulk")
+            .SetProperty(p => p.Title, p => p.Title + "updated title in bulk")
             .SetProperty(p => p.Description, "updated desc in bulk"));
             return Ok();
         }

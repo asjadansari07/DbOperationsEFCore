@@ -141,7 +141,7 @@ namespace DbOperationsEFCore.Controllers
             //return Ok(response);
 
             var result = await (from currencies in _appDbContext.Currencies
-                                select new Currency() { Id = currencies.Id, Title = currencies.Title }).AsNoTracking().ToListAsync();//if do not want to track changes by EF core
+                                select new Currency() { Id = currencies.Id, Title = currencies.Title }).AsNoTracking().ToListAsync();//if do not want to track changes by EF core(if operation is to only read data from db)
 
             return Ok(result);
         }
